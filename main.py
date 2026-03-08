@@ -1,8 +1,9 @@
 from data_parcers import parse_input
 from cli_processing import add_contact, change_contact, contact_phone, all_contacts, add_birthday, show_birthday, birthdays
+from models import AddressBook
 
 def main():
-    contacts = {}
+    contacts = AddressBook()
     print("Welcome to the assistant bot!")
     while True:
         user_input = input("Enter a command: ")

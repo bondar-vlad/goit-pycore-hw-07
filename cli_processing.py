@@ -28,11 +28,11 @@ def change_contact(args, contacts: AddressBook):
 @input_error
 def contact_phone(args, contacts: AddressBook):
     name, *_ = args
-    return "\n".join(contacts.find(name).phones)
+    return "\n".join(str(phone) for phone in contacts.find(name).phones)
 
 @input_error
 def all_contacts(args, contacts: AddressBook):
-    return "\n".join(list(contacts.values()))
+    return "\n".join(str(record) for record in contacts.values())
 
 @input_error
 def add_birthday(args, book: AddressBook):
@@ -49,4 +49,8 @@ def show_birthday(args, book: AddressBook):
 
 @input_error
 def birthdays(args, book: AddressBook):
-    return "\n".join(list([r.birthday for r in book.get_upcoming_birthdays()]))
+    upcoming = book.get_upcoming_birthdays()
+    return "\n".join(
+        f"{r.name.get_value()}: {r.birthday.get_value().strftime('%d.%m.%Y')}"
+        for r in upcoming
+    )
