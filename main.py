@@ -1,5 +1,5 @@
-from data import parse_input
-from processing import add_contact, change_contact, contact_phone, all_contacts, add_birthday, show_birthday, birthdays
+from data_parcers import parse_input
+from cli_processing import add_contact, change_contact, contact_phone, all_contacts, add_birthday, show_birthday, birthdays
 
 def main():
     contacts = {}
