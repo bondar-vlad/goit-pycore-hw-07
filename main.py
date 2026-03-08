@@ -1,5 +1,5 @@
 from data import parse_input
-from processing import add_contact, change_contact, contact_phone, all_contacts
+from processing import add_contact, change_contact, contact_phone, all_contacts, add_birthday, show_birthday, birthdays
 
 def main():
     contacts = {}
@@ -21,7 +21,13 @@ def main():
             case "phone":
                 print(contact_phone(args, contacts))
             case "all":
-                print(all_contacts(contacts))
+                print(all_contacts(args, contacts))
+            case "add-birthday":
+                print(add_birthday(args, contacts))
+            case "show-birthday":
+                print(show_birthday(args, contacts))
+            case "birthdays":
+                print(birthdays(args, contacts))
             case _:
                 print("Invalid command.")
 

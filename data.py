@@ -1,4 +1,4 @@
-from processing import input_error
+from error_processing import input_error
 
 @input_error
 def parse_input(user_input):

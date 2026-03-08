@@ -1,5 +1,5 @@
 from collections import UserDict
-from processing import PhoneVerificationError, BirthdayVerificationError
+from error_processing import PhoneVerificationError, BirthdayVerificationError
 from datetime import datetime, timedelta
 import re
 
@@ -11,7 +11,6 @@ class Field:
         return str(self.value)
 
 class Name(Field):
-    # реалізація класу
 		pass
 
 class Phone(Field):
@@ -34,8 +33,6 @@ class Record:
         self.name = Name(name)
         self.phones = []
         self.birthday = None
-
-    # реалізація класу
 
     def add_phone(self, phone):
           if not self.find_phone(phone):
@@ -61,9 +58,7 @@ class Record:
 class AddressBook(UserDict):
     def __init__(self, iterable = {}):
           super().__init__(iterable)
-
-    # реалізація класу
-          
+       
     def add_record(self, record: Record):
           self.data[record.name.value] = record
 
@@ -74,7 +69,7 @@ class AddressBook(UserDict):
           self.data.pop(name)
 
     def get_upcoming_birthdays(self):
-        upcoming_birthdays = []
+        contacts_with_upcoming_birthdays = []
         today = datetime.today().date()
 
         for user in self.data:
@@ -86,5 +81,5 @@ class AddressBook(UserDict):
             if (days_difference >= 0 and days_difference < 7):
                 birthday_weekday = birthday_this_year.isoweekday()
                 congratulation_date = birthday_this_year if birthday_weekday < 6 else birthday_this_year + timedelta(days=8-birthday_weekday)
-                upcoming_birthdays.append({"name":user.name, "congratulation_date":congratulation_date})
-        return upcoming_birthdays
+                contacts_with_upcoming_birthdays.append(user)
+        return contacts_with_upcoming_birthdays

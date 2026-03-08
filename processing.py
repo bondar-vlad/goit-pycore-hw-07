@@ -1,25 +1,5 @@
-from functools import wraps
-
-def input_error(func):
-    @wraps(func)
-    def inner(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except ValueError:
-            return "Invalid command format."
-        except IndexError:
-            return "Contact not found."
-    return inner
-
-class PhoneVerificationError(Exception):
-    def __init__(self, message="Phone should contain 10 digits"):
-        self.message = message
-        super().__init__(self.message)
-
-class BirthdayVerificationError(Exception):
-    def __init__(self, message="Invalid date format. Use DD.MM.YYYY"):
-        self.message = message
-        super().__init__(self.message)
+from error_processing import input_error
+from models import AddressBook
 
 @input_error
 def add_contact(args, contacts):
@@ -41,7 +21,22 @@ def contact_phone(args, contacts: dict):
     return contacts.get(name, "Contact not found.")
 
 @input_error
-def all_contacts(contacts: dict):
+def all_contacts(args, contacts: dict):
     return "\n".join(list(contacts.values()))
 
+@input_error
+def add_birthday(args, book: AddressBook):
+    name, birthday = args
+    contact = book.find(name)
+    contact.add_birthday(birthday)
+    return "Birthday added"
 
+@input_error
+def show_birthday(args, book: AddressBook):
+    name = args[0]
+    contact = book.find(name)
+    return contact.birthday
+
+@input_error
+def birthdays(args, book: AddressBook):
+    return "\n".join(list([r.birthday for r in book.get_upcoming_birthdays()]))
