@@ -9,6 +9,8 @@ def input_error(func):
             return "Invalid command format."
         except IndexError:
             return "Contact not found."
+        except Exception:
+            return "Unknown error occured."
     return inner
 
 class PhoneVerificationError(Exception):
@@ -18,5 +20,10 @@ class PhoneVerificationError(Exception):
 
 class BirthdayVerificationError(Exception):
     def __init__(self, message="Invalid date format. Use DD.MM.YYYY"):
+        self.message = message
+        super().__init__(self.message)
+
+class NameVerificationError(Exception):
+    def __init__(self, message="Name was not found"):
         self.message = message
         super().__init__(self.message)

@@ -1,30 +1,40 @@
 from collections import UserDict
-from error_processing import PhoneVerificationError, BirthdayVerificationError
+from error_processing import PhoneVerificationError, BirthdayVerificationError, NameVerificationError
 from datetime import datetime, timedelta
 import re
 
 class Field:
     def __init__(self, value):
-        self.value = value
+        self.set_value(value)
+
+    def get_value(self):
+         return self.value
+    
+    def set_value(self, new_value):
+         self.value = new_value
 
     def __str__(self):
         return str(self.value)
 
 class Name(Field):
-		pass
+    def set_value(self, new_value):
+        if len(new_value.strip()) != 0:
+            super().set_value(new_value)
+        else:
+             raise NameVerificationError()
 
 class Phone(Field):
-    def __init__(self, value: str):
-        if len(value) == 10:
-            super().__init__(value)
+    def set_value(self, new_value: str):
+        if len(new_value) == 10:
+            super().set_value(new_value)
         else:
              raise PhoneVerificationError()
 
 class Birthday(Field):
-    def __init__(self, value: str):
-        if re.fullmatch(r"\d{2}\.\d{2}\.\d{4}", value.strip()):
-             birthday = datetime.strptime(value, "%d.%m.%Y").date()
-             super().__init__(birthday)
+    def set_value(self, new_value: str):
+        if re.fullmatch(r"\d{2}\.\d{2}\.\d{4}", new_value.strip()):
+             birthday = datetime.strptime(new_value, "%d.%m.%Y").date()
+             super().set_value(birthday)
         else:
             raise BirthdayVerificationError()
 
@@ -42,10 +52,10 @@ class Record:
           self.phones.remove(self.find_phone(phone))
 
     def edit_phone(self, old_phone, new_phone):
-          self.find_phone(old_phone).value = new_phone
+          self.find_phone(old_phone).set_value(new_phone)
 
-    def find_phone(self, phone):
-          phones = list(filter(lambda ph: ph.value == phone, self.phones))
+    def find_phone(self, phone) -> Phone:
+          phones = list(filter(lambda ph: ph.get_value() == phone, self.phones))
           if len(phones):
                return phones[0]
           
@@ -53,14 +63,14 @@ class Record:
           self.birthday = birthday
 
     def __str__(self):
-        return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
+        return f"Contact name: {self.name.get_value()}, phones: {'; '.join(p.get_value() for p in self.phones)}"
 
 class AddressBook(UserDict):
     def __init__(self, iterable = {}):
           super().__init__(iterable)
        
     def add_record(self, record: Record):
-          self.data[record.name.value] = record
+          self.data[record.name.get_value()] = record
 
     def find(self, name: str) -> Record:
           return self.data.get(name)
